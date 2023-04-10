@@ -14,10 +14,12 @@ namespace Ruleta
             do
             {
 
+                
+
                 Data.GetPlayers();
 
 
-                Console.Clear();
+                Data.Prechod();
 
                 Console.WriteLine("Login        [1]");
                 Console.WriteLine("Registrace   [2]");
@@ -35,10 +37,11 @@ namespace Ruleta
                 }
             }while (active);
         }
-
+        
         public static void Login()
         {
-            Console.Clear();
+            
+            Data.Prechod();
             Console.Write(" Zadej své příjmení: ");
             string prijmeni = Console.ReadLine();
             Console.Write("\n Zadej své jméno: ");
@@ -67,7 +70,7 @@ namespace Ruleta
         }
         public static void Register()
         {
-            Console.Clear();
+            Data.Prechod();
             Console.Write(" Zadej své jméno: ");
             string jmeno = Console.ReadLine();
             Console.Write("\n Zadej své přijmení: ");
@@ -133,7 +136,7 @@ namespace Ruleta
             }
 
 
-            Console.Clear();
+            Data.Prechod();
             Menu();
         }
     }

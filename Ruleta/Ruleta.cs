@@ -35,7 +35,7 @@ namespace Ruleta
 
         public void Roztoc()
         {
-            Console.Clear();
+            Data.Prechod();
 
             AutoPlay();
 
@@ -89,7 +89,7 @@ namespace Ruleta
 
             
 
-            for (int i = 0; i < random.Next(100, 200); i++)
+            for (int i = 0; i < random.Next(Data.RozsahRuletyA[0], Data.RozsahRuletyA[1]); i++)
             {
                 Console.SetCursorPosition(posX,posY);
                 Console.CursorVisible = false;
@@ -113,7 +113,7 @@ namespace Ruleta
             }
 
 
-            for (int i = 0; i < random.Next(20, 100); i++)
+            for (int i = 0; i < random.Next(Data.RozsahRuletyB[0], Data.RozsahRuletyB[1]); i++)
             {
                 Console.SetCursorPosition(posX, posY);
                 Console.CursorVisible = false;
@@ -166,7 +166,7 @@ namespace Ruleta
                 Console.Write("0");
             }
             Console.WriteLine(value);
-            Console.BackgroundColor = ConsoleColor.DarkGray;
+            Console.BackgroundColor = Data.Barvy[0];
 
         }
 
@@ -189,22 +189,28 @@ namespace Ruleta
                 string barva;
                 string sudost;
 
+                Console.BackgroundColor = ConsoleColor.DarkRed;
+
                 if (sazka.CerveneNeboCerne)
                 {
                     barva = "červené";
                 }else
                 {
                     barva = "černé";
+                    Console.BackgroundColor = ConsoleColor.Black;
                 }
 
                 if (sazka.LicheNeboSude)
                 {
                     sudost = "liché";
+                    Console.Write("L");
                 }else
                 {
                     sudost = "sudé";
+                    Console.Write("S");
                 }
-
+                Console.BackgroundColor = Data.Barvy[0];
+                Console.Write(" ");
                 Console.WriteLine($"{sazka.Hrac.Name} {sazka.Hrac.LastName} vsadil {sazka.VyseSazky} na {sudost} {barva} ");
             }
         }
@@ -214,17 +220,27 @@ namespace Ruleta
             foreach (Sazka sazka in Sazky)
             {
                 string uspesna = "neúspěsně";
+                Console.BackgroundColor = ConsoleColor.DarkMagenta;
                 if (sazka.Uspesna)
                 {
                     uspesna = "úspěšně";
+                    Console.BackgroundColor = ConsoleColor.DarkYellow;
                 }
-
+                Console.Write(" ");
+                Console.BackgroundColor = Data.Barvy[0];
                 Console.WriteLine($"{sazka.Hrac.Name} {sazka.Hrac.LastName} {uspesna} vsadil a nyní má na účtě {sazka.Hrac.Credit}");
             }
         }
 
         void AutoPlay()
         {
+            Data.GetPlayers();
+            List<Hrac> vsazeno=new List<Hrac>();
+            foreach (Sazka sazka in Data.Ruleta.Sazky)
+            {
+                vsazeno.Add(sazka.Hrac);
+            }
+
             foreach (Hrac hrac in Data.Hraci)
             {
                 Random rand = new Random();
@@ -238,7 +254,8 @@ namespace Ruleta
                     }
                 }else
                 {
-                    if (hrac.AutoPlay&&active)
+                    
+                    if (hrac.AutoPlay&&active&& !vsazeno.Contains(hrac))
                     {
                         Sazky.Add(new Sazka(hrac, 25 * rand.Next(1, 31), rand.NextDouble() > 0.5, rand.NextDouble() > 0.5));
 

@@ -14,12 +14,13 @@ namespace Ruleta
             bool active = true;
             do
             {
-                Console.Clear();
+                Data.Prechod();
                 Console.WriteLine($"Vítej, {hrac.Name} {hrac.LastName}, co si přeješ?\nZůstatek: {hrac.Credit}\n");
 
-                Console.WriteLine("Hrát         [1]");
-                Console.WriteLine("Nastavení    [2]");
-                Console.WriteLine("Odhlásit se  [0]");
+                Console.WriteLine("Vsadit           [1]");
+                Console.WriteLine("Roztočit ruletu  [2]");
+                Console.WriteLine("Nastavení        [3]");
+                Console.WriteLine("Odhlásit se      [0]");
 
 
                 switch (Console.ReadKey(true).KeyChar)
@@ -27,16 +28,19 @@ namespace Ruleta
                     default: Menu(); break;
 
                     case '1': Hrat(); break;
-                    case '2': Nastaveni(); break;
-                    case '0': active = false; break;
+                    case '2': Data.Ruleta.Roztoc(); break;
+                    case '3': Nastaveni(); break;
+                    case '0': Data.Logged = false; active = false; break;
                 }
+                if (!active)
+                    break;
             } while (active);
         }
   
         static void Hrat()
         {
             var hrac = Data.Hraci[Data.LogedPlayerID];
-            Console.Clear();
+            Data.Prechod();
             Console.Write($"Kolik si chceš vsadit? [zůstatek: {hrac.Credit}] - ");
             string input = Console.ReadLine();
             if (!int.TryParse(input, out int result))
@@ -73,14 +77,15 @@ namespace Ruleta
                 }
             }loop= true;
 
-            Console.Write("\n\nChceš opravdu vsadit? Ano[1] / Ne[2] ");
+            Console.Write("\n\nChceš opravdu vsadit? Ano[1] / Ano, ale ještě netočit[2] / Ne[0] ");
 
             while (loop)
             {
                 switch (Console.ReadKey().KeyChar)
                 {
                     case '1': Data.Ruleta.Vsad(new Sazka(hrac, result, licheNeboSude, cerveneNeboCerne)); Data.Ruleta.Roztoc() ; loop = false; break;
-                    case '2':  loop = false; break;
+                    case '2': Data.Ruleta.Vsad(new Sazka(hrac, result, licheNeboSude, cerveneNeboCerne)); loop = false; break;
+                    case '3':  loop = false; break;
                 }
             }
 
@@ -95,18 +100,18 @@ namespace Ruleta
             do
             {
                 Data.Save();
-                Console.Clear();
+                Data.Prechod();
 
                 Console.WriteLine($"Automatické hraní            [1] - {hrac.AutoPlay}");
-                Console.WriteLine("Experimentální režim         [2] - false"); //dodělat - maz. soub.
-                Console.WriteLine("Zpět                         [0]");
+                Console.WriteLine($"Animace                      [2] - {Data.Animace}"); 
+                Console.WriteLine( "Zpět                         [0]");
 
                 switch (Console.ReadKey(true).KeyChar)
                 {
                     default: Menu(); break;
 
                     case '1': hrac.AutoPlay = !hrac.AutoPlay; break;
-                    case '2': Nastaveni(); break;
+                    case '2': Data.Animace = !Data.Animace;Data.ConfigSync(1); break;
                     case '0': active = false; break;
                 }
 
