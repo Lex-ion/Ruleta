@@ -82,6 +82,15 @@ namespace Ruleta
 
         void VisualEff(int value, bool barva)
         {
+            if (!Data.Animace)
+            {
+                Console.BackgroundColor = ConsoleColor.Black;
+                if (barva)
+                Console.BackgroundColor = ConsoleColor.DarkRed;
+                Console.Write(value);
+                return;
+            }
+
             Random random = new Random();
 
             int posX = Console.CursorLeft;
