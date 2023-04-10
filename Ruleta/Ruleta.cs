@@ -88,6 +88,7 @@ namespace Ruleta
                 if (barva)
                 Console.BackgroundColor = ConsoleColor.DarkRed;
                 Console.Write(value);
+                Console.WriteLine();
                 return;
             }
 
